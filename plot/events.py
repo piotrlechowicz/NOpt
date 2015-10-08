@@ -3,11 +3,13 @@ class MousePlotEvents:
         self.press = False
         self.cur_xlim = None
         self.cur_ylim = None
+
         self.xpress = None
         self.ypress = None
 
         self.start_xlim = None
         self.start_ylim = None
+        self.start_zlim = None
 
     def zoom(self, ax, zoom_scale=1.1):
         def zoom(event):
@@ -38,10 +40,9 @@ class MousePlotEvents:
             ax.set_ylim([ydata - new_height * (1-rely), ydata + new_height * (rely)])
             ax.figure.canvas.draw()
 
-        fig = ax.get_figure() # get the figure of interest
+        # get the figure of interest
+        fig = ax.get_figure()
         fig.canvas.mpl_connect('scroll_event', zoom)
-
-        return zoom
 
     def move(self, ax):
         def on_press(event):
@@ -82,13 +83,38 @@ class MousePlotEvents:
         fig.canvas.mpl_connect('button_release_event', on_release)
         fig.canvas.mpl_connect('motion_notify_event', on_motion)
 
-    def reset(self, ax):
+    def reset_3D(self, ax):
+        def right_button_pressed(event):
+            if event.inaxes != ax:
+                return
+
+            print ax.get_xlim()
+
+            print event.button
+            if event.button == 3:
+                ax.set_xlim(self.start_xlim)
+                ax.set_ylim(self.start_ylim)
+                ax.set_zlim(self.start_zlim)
+                ax.figure.canvas.draw()
+
+        # get the figure of interest
+        fig = ax.get_figure()
+
+        # it is necessary to make tuple because in 3d surface axes are returned as a list
+        self.start_xlim = tuple(ax.get_xlim())
+        self.start_ylim = tuple(ax.get_ylim())
+        self.start_zlim = tuple(ax.get_zlim())
+
+        fig.canvas.mpl_connect('button_press_event', right_button_pressed)
+
+    def reset_2D(self, ax):
         # TODO: Add third dimensional to reset
         def right_button_pressed(event):
             if event.inaxes != ax:
                 return
 
-            elif event.button == 3:
+            print event.button
+            if event.button == 3:
                 ax.set_xlim(self.start_xlim)
                 ax.set_ylim(self.start_ylim)
                 ax.figure.canvas.draw()
@@ -98,5 +124,7 @@ class MousePlotEvents:
 
         self.start_xlim = ax.get_xlim()
         self.start_ylim = ax.get_ylim()
+
+        print self.start_xlim, self.start_ylim
 
         fig.canvas.mpl_connect('button_press_event', right_button_pressed)

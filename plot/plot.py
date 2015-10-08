@@ -41,18 +41,19 @@ class Plotter:
 
         mouse_events = MousePlotEvents()
         mouse_events.zoom(ax)
-        mouse_events.reset(ax)
+        mouse_events.reset_3D(ax)
 
-        ax = fig.add_subplot(122)
-        im = ax.pcolormesh(x, y, z, cmap=cm.jet)
-        ax.set_xlabel('x', fontweight='bold')
-        ax.set_ylabel('y', fontweight='bold')
-        ax.yaxis.set_label_position('right')
+        ax2 = fig.add_subplot(122)
+        im = ax2.pcolormesh(x, y, z, cmap=cm.jet)
+        ax2.set_xlabel('x', fontweight='bold')
+        ax2.set_ylabel('y', fontweight='bold')
+        ax2.yaxis.set_label_position('right')
         # ax.yaxis.tick_right()
 
-        mouse_events.zoom(ax)
-        mouse_events.move(ax)
-        mouse_events.reset(ax)
+        mouse_events2 = MousePlotEvents()
+        mouse_events2.zoom(ax2)
+        mouse_events2.move(ax2)
+        mouse_events2.reset_2D(ax2)
 
         fig.subplots_adjust(bottom=0.2)
         cbar_ax = fig.add_axes([0.1, 0.05, 0.8, 0.05])
