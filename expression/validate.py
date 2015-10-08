@@ -1,56 +1,5 @@
-__author__ = 'Piotr Lechowicz'
-
-import sys
-
-try:
-    from py_expression_eval import Parser
-    # import numpy
-except ImportError as error:
-    print error.message
-    sys.exit("Not all the requirements are fulfilled")
-
-
-class App:
-    def __init__(self):
-        pass
-
-    def run(self):
-        # main program loop
-        while True:
-            print "Enter a goal function"
-            user_input = raw_input()
-            print user_input
-            if user_input == "quit":
-                break
-
-            # application logic
-            goal_function = GoalFunction()
-            parser = Parser()
-            try:
-                goal_function.expression = parser.parse(user_input)
-            except Exception as exception:
-                print exception.message
-                continue
-
-            expression_validator = ExpressionValidator(goal_function.expression, goal_function.variables)
-            goal_function.expression, validates, validation_error = expression_validator.validate()
-
-            if not validates:
-                print validation_error
-                continue
-
-            print goal_function.expression.toString()
-
-
-class GoalFunction:
-    """ Class which holds a goal function to optimize """
-    def __init__(self):
-        self.variables = ['x', 'y']
-        self.expression = ""
-
-
 class ExpressionValidator:
-    """Validates an user's input according to the variables in the goal function
+    """Validates an user's input according to the variables in the goal expression
 
         @return expression, validates, validation_error
     """
@@ -61,7 +10,7 @@ class ExpressionValidator:
         self.variables = variables
         self.expr = expression
         self.all_expr_variables = self.expr.variables()
-        self.validation_error = ""
+        self.validation_error = None
 
     def validate(self):
         self.evaluate_constants()
@@ -89,8 +38,3 @@ class ExpressionValidator:
                 self.validation_error += " '" + var + "'"
             self.validation_error += "\n"
             self.validates = False
-
-
-if __name__ == "__main__":
-    app = App()
-    app.run()
