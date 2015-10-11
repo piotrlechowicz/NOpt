@@ -90,7 +90,6 @@ class MousePlotEvents:
 
             print ax.get_xlim()
 
-            print event.button
             if event.button == 3:
                 ax.set_xlim(self.start_xlim)
                 ax.set_ylim(self.start_ylim)

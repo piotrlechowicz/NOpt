@@ -1,5 +1,7 @@
 import sys
 
+from optimization.function_tools import vectorize_expression
+
 try:
     from mpl_toolkits.mplot3d import Axes3D
     from matplotlib import cm
@@ -8,6 +10,7 @@ try:
 except ImportError as error:
     print error.message
     sys.exit("Not all the requirements are fulfilled")
+
 
 from events import MousePlotEvents
 
@@ -25,7 +28,7 @@ class Plotter:
         self.y_range = np.linspace(start=start, stop=stop, num=num)
 
     def plot(self, expression, function_name):
-        evaluate = self.__vectorize_expression(expression)
+        evaluate = vectorize_expression(expression)
         x, y = np.meshgrid(self.x_range, self.y_range)
         z = evaluate(x, y)
 
@@ -60,10 +63,6 @@ class Plotter:
         fig.colorbar(im, cax=cbar_ax, orientation='horizontal')
 
         plt.show()
-
-    @staticmethod
-    def __vectorize_expression(expression):
-        return np.vectorize(lambda x, y: expression.evaluate({'x': x, 'y': y}))
 
 
 def test_plot():
