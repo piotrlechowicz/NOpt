@@ -1,6 +1,6 @@
 import sys
 
-from optimization.function_tools import vectorize_expression
+from optimization.optimization_tools import vectorize_expression
 
 try:
     from mpl_toolkits.mplot3d import Axes3D

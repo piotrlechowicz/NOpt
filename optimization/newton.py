@@ -1,7 +1,7 @@
 __author__ = 'piotr'
 
 import numpy as np
-from function_tools import GradientAlgorithm
+from optimization_tools import GradientAlgorithm
 
 
 class NewtonAlgorithm(GradientAlgorithm):
