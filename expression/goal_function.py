@@ -7,3 +7,6 @@ class GoalFunction:
 
     def fetch_function_name(self):
         self.function_name = self.expression.simplify({}).toString()[1:-1]
+
+    def get_function_name(self):
+        return self.function_name
