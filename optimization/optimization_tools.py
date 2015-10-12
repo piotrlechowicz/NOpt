@@ -124,3 +124,11 @@ if __name__ == "__main__":
     print "Hessian: "
     print ga.get_hessian_at(-2., -1.)
     print ga.get_hessian_as_array_at(-2., -1.)
+    print "---------------------------"
+    print "Gradient: "
+    print ga.get_gradient_at(1.2, 0.6)
+    print ga.get_gradient_as_array_at(1.2, 0.6)
+    print "---------------------------"
+    print "Hessian: "
+    print ga.get_hessian_at(1.2, 0.6)
+    print ga.get_hessian_as_array_at(1.2, 0.6)
