@@ -49,7 +49,7 @@ class TestOptimizationAlgorithm(unittest.TestCase):
             for (test, answer) in zip(self.tests_gradient[i], self.answers_gradient[i]):
                 grad = self.grad_alg.get_gradient_as_array_at(*test)
                 self.assertAlmostEqual(answer[0], grad[0][0], delta=0.1)
-                self.assertAlmostEqual(answer[1], grad[0][1], delta=0.2)
+                self.assertAlmostEqual(answer[1], grad[1][0], delta=0.2)
 
     def testHessian(self):
         for i in range(self.expressions.__len__()):

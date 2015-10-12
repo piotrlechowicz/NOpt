@@ -68,7 +68,7 @@ class GradientAlgorithm(OptimizationAlgorithm):
 
     def get_gradient_as_array_at(self, x, y):
         gx, gy = self.get_gradient_at(x, y)
-        return np.array([[gx, gy]])
+        return np.array([[gx], [gy]])
 
     def get_hessian_at(self, x, y):
         id_x = self.get_id_of_x(x)
