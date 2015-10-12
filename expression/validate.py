@@ -10,7 +10,7 @@ class ExpressionValidator:
         self.variables = variables
         self.expr = expression
         self.all_expr_variables = self.expr.variables()
-        self.validation_error = None
+        self.validation_error = ""
 
     def validate(self):
         self.__evaluate_constants()

@@ -2,6 +2,7 @@ import unittest
 from py_expression_eval import Parser
 from optimization.optimization_tools import OptimizationAlgorithm,\
     GradientAlgorithm
+import numpy as np
 
 
 class TestOptimizationAlgorithm(unittest.TestCase):
@@ -42,6 +43,14 @@ class TestOptimizationAlgorithm(unittest.TestCase):
                 self.assertAlmostEqual(answer[0], gx, delta=0.1)
                 self.assertAlmostEqual(answer[1], gy, delta=0.1)
 
+    def testGradientArray(self):
+        for i in range(self.expressions.__len__()):
+            self.grad_alg = GradientAlgorithm(*self.expressions[i])
+            for (test, answer) in zip(self.tests_gradient[i], self.answers_gradient[i]):
+                grad = self.grad_alg.get_gradient_as_array_at(*test)
+                self.assertAlmostEqual(answer[0], grad[0][0], delta=0.1)
+                self.assertAlmostEqual(answer[1], grad[0][1], delta=0.2)
+
     def testHessian(self):
         for i in range(self.expressions.__len__()):
             self.grad_alg = GradientAlgorithm(*self.expressions[i])
@@ -51,6 +60,17 @@ class TestOptimizationAlgorithm(unittest.TestCase):
                 self.assertAlmostEquals(answer[1], gxy, delta=0.1)
                 self.assertAlmostEquals(answer[2], gyx, delta=0.1)
                 self.assertAlmostEquals(answer[3], gyy, delta=0.1)
+
+    def testHessianArray(self):
+        for i in range(self.expressions.__len__()):
+            self.grad_alg = GradientAlgorithm(*self.expressions[i])
+            for (test, answer) in zip(self.tests_hessian[i], self.answers_hessian[i]):
+                hessian = self.grad_alg.get_hessian_as_array_at(*test)
+                self.assertAlmostEquals(answer[0], hessian[0][0], delta=0.1)
+                self.assertAlmostEquals(answer[1], hessian[0][1], delta=0.1)
+                self.assertAlmostEquals(answer[2], hessian[1][0], delta=0.1)
+                self.assertAlmostEquals(answer[3], hessian[1][1], delta=0.1)
+
 
 if __name__ == "__main__":
     unittest.main()

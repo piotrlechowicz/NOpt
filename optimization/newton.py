@@ -1,6 +1,3 @@
-__author__ = 'piotr'
-
-import numpy as np
 from optimization_tools import GradientAlgorithm
 
 

@@ -28,7 +28,6 @@ class MousePlotEvents:
                 scale_factor = zoom_scale
             else:
                 scale_factor = 1
-                print event.button
 
             new_width = (cur_xlim[1] - cur_xlim[0]) * scale_factor
             new_height = (cur_ylim[1] - cur_ylim[0]) * scale_factor
@@ -88,8 +87,6 @@ class MousePlotEvents:
             if event.inaxes != ax:
                 return
 
-            print ax.get_xlim()
-
             if event.button == 3:
                 ax.set_xlim(self.start_xlim)
                 ax.set_ylim(self.start_ylim)
@@ -112,7 +109,6 @@ class MousePlotEvents:
             if event.inaxes != ax:
                 return
 
-            print event.button
             if event.button == 3:
                 ax.set_xlim(self.start_xlim)
                 ax.set_ylim(self.start_ylim)
@@ -123,7 +119,5 @@ class MousePlotEvents:
 
         self.start_xlim = ax.get_xlim()
         self.start_ylim = ax.get_ylim()
-
-        print self.start_xlim, self.start_ylim
 
         fig.canvas.mpl_connect('button_press_event', right_button_pressed)

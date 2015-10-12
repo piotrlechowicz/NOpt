@@ -66,10 +66,18 @@ class GradientAlgorithm(OptimizationAlgorithm):
         id_y = self.get_id_of_y(y)
         return self.diff_tools.get_gradient_at_id(id_x, id_y)
 
+    def get_gradient_as_array_at(self, x, y):
+        gx, gy = self.get_gradient_at(x, y)
+        return np.array([[gx, gy]])
+
     def get_hessian_at(self, x, y):
         id_x = self.get_id_of_x(x)
         id_y = self.get_id_of_y(y)
         return self.diff_tools.get_hessian_at_id(id_x, id_y)
+
+    def get_hessian_as_array_at(self, x, y):
+        gxx, gxy, gyx, gyy = self.get_hessian_at(x, y)
+        return np.array([[gxx, gxy], [gyx, gyy]])
 
     def __initialize_diff_tools(self):
         self.diff_tools.calculate_gradient()
@@ -104,4 +112,15 @@ class DiffTools:
 
 
 if __name__ == "__main__":
-    pass
+    from py_expression_eval import Parser
+    parser = Parser()
+    expr = parser.parse('x^2 + y^3*x')
+    ga = GradientAlgorithm(expr, [-4., -4.], [4., 4.], [801, 801])
+    print "---------------------------"
+    print "Gradient: "
+    print ga.get_gradient_at(-2., -1.)
+    print ga.get_gradient_as_array_at(-2., -1.)
+    print "---------------------------"
+    print "Hessian: "
+    print ga.get_hessian_at(-2., -1.)
+    print ga.get_hessian_as_array_at(-2., -1.)
