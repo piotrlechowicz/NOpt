@@ -28,6 +28,9 @@ class NewtonAlgorithm(GradientAlgorithm):
     def set_starting_point(self, current):
         self.current_point = np.array([[current[0]], [current[1]]])
 
+    def set_starting_point_numpy_array(self, point):
+        self.current_point = point
+
     def set_tolerance(self, tolerance):
         self.tolerance = tolerance
 
@@ -51,8 +54,6 @@ class NewtonAlgorithm(GradientAlgorithm):
         gradient = self.get_gradient_as_array_at(xk, yk)
 
         hessian = self.get_hessian_as_array_at(xk, yk)
-        # TODO: what if inv hessian can't be calculated
-        # TODO: numpy.linalg.linalg.LinAlgError -> compute next move using just gradient
         try:
             inv_hessian = np.linalg.inv(hessian)
         except np.linalg.linalg.LinAlgError as error:
