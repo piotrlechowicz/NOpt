@@ -95,7 +95,8 @@ class Plotter:
 
     def add_to_result_numpy_points(self, fst_point, snd_point):
         self.res_ax.plot([fst_point[0][0], snd_point[0][0]], [fst_point[1][0], snd_point[1][0]], 'mo:')
-        # TODO: add any number of points -> use np to swap the arrays
+        # TODO: add any number of points -> use np to swap the arrays \
+        # you have to join the arrays and split them horizontally into two parts
         plt.draw()
 
     def wait_to_close_plot_windows(self):

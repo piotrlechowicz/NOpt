@@ -54,28 +54,11 @@ class App:
             # TODO: create more user friend api
             # TODO: to many numpy calculations
             # get drawing parameters
-            print "enter: start, stop, num_od_values_for_drawing"
-            input = raw_input()
-            input = input.split(',')
-            parameters_dr = []
-            if input.__len__() > 1:
-                for par in input:
-                    par = float(par)
-                    parameters_dr.append([par, par])
-            else:
-                parameters_dr.extend([[-4., -4.], [4., 4.], [101, 101]])
+            parameters_na = self.get_function_range_parameters()
+            parameters_dr = parameters_na
 
-            # get newton algorithm parameters
-            print "enter: start, stop, num_of_values_for_newton"
-            input = raw_input()
-            input = input.split(',')
-            parameters_na = []
-            if input.__len__() > 1:
-                for par in input:
-                    par = float(par)
-                    parameters_na.append([par, par])
-            else:
-                parameters_na.extend([[-4., -4.], [4., 4.], [1001, 1001]])
+            parameters_dr[2][0] /= 10
+            parameters_dr[2][1] /= 10
 
             # plot function
             print goal_function.function_name
@@ -92,6 +75,19 @@ class App:
                 xn = xnn
 
             plotter.wait_to_close_plot_windows()
+
+    def get_function_range_parameters(self):
+        print "enter: start, stop, num_od_values"
+        user_input = raw_input()
+        user_input = user_input.split(',')
+        parameters = []
+        if user_input.__len__() < 3:
+            for par in input:
+                par = float(par)
+                parameters.append([par, par])
+        else:
+            parameters.extend([[-4., -4.], [4., 4.], [1000, 1000]])
+        return parameters
 
 
 if __name__ == "__main__":

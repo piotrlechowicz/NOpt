@@ -37,6 +37,9 @@ class NewtonAlgorithm(GradientAlgorithm):
     def set_max_nr_of_iterations(self, max_nr):
         self.max_nr_of_iterations = max_nr
 
+    def get_current_nr_of_iterations(self):
+        return self.iteration
+
     def compute_algorithm(self):
         while not self.minimum_found:
             self.__algorithm_step()
