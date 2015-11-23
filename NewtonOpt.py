@@ -1,5 +1,3 @@
-from docutils.nodes import paragraph
-
 __author__ = 'Piotr Lechowicz'
 
 import sys
@@ -11,19 +9,39 @@ except ImportError as error:
     print "py_expression_eval is necessary"
     sys.exit("Not all the requirements are fulfilled")
 
+try:
+    from PyQt5.QtWidgets import QApplication, QMainWindow
+except ImportError as error:
+    print error.message
+    print "PyQt5 is necessary"
+    sys.exit("Not all the requirements are fulfilled")
 
 from expression.goal_function import GoalFunction
 from expression.validate import ExpressionValidator
 from plot.plot import Plotter
 from optimization.newton import NewtonAlgorithm
 from numpy import array
+from qtgui import gui
 
 # Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
 
+import matplotlib
+# matplotlib.use("Qt5Agg")
+from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
 
-class App:
-    def __init__(self):
-        pass
+
+class App(QMainWindow, gui.Ui_MainWindow):
+    def __init__(self, parent=None):
+        super(App, self).__init__(parent)
+        self.setupUi(self)
+
+        # define connections
+        self.executeButton.clicked.connect(self.executeButtonClicked)
+
+    def executeButtonClicked(self):
+        print "exec clicked"
 
     def run(self):
         # main program loop
@@ -67,6 +85,19 @@ class App:
             plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
             plotter.plot_function_in_3D()
 
+            # add plot on the gui
+            figure = plt.figure()
+            canvas = FigureCanvas(figure)
+            toolbar = NavigationToolbar(canvas, self)
+            self.matPlotLayout.addWidget(toolbar)
+            self.matPlotLayout.addWidget(canvas)
+            data = [range(10)]
+            ax = figure.add_subplot(111)
+            ax.hold(True)
+            ax.plot(data)
+            canvas.draw()
+
+
             na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
             # starting point
             xn = array([[3.], [3.5]])
@@ -94,5 +125,8 @@ class App:
 
 
 if __name__ == "__main__":
-    app = App()
-    app.run()
+    app = QApplication(sys.argv)
+    form = App()
+    form.show()
+    form.run()
+    app.exec_()
