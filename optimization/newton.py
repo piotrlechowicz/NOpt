@@ -3,6 +3,7 @@ import numpy as np
 
 
 class NewtonAlgorithm(GradientAlgorithm):
+    #todo: switch number of  values into the resution
     def __init__(self, expression, start, stop, num_of_values, tolerance=0.1, tau=1, debug=False):
         """
         :param expression: expression of the goal function

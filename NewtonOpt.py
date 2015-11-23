@@ -8,6 +8,7 @@ try:
     from py_expression_eval import Parser
 except ImportError as error:
     print error.message
+    print "py_expression_eval is necessary"
     sys.exit("Not all the requirements are fulfilled")
 
 
@@ -18,6 +19,7 @@ from optimization.newton import NewtonAlgorithm
 from numpy import array
 
 # Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
+
 
 class App:
     def __init__(self):
@@ -54,18 +56,19 @@ class App:
             # TODO: create more user friend api
             # TODO: to many numpy calculations
             # get drawing parameters
-            parameters_na = self.get_function_range_parameters()
-            parameters_dr = parameters_na
+            parameters_calculations = self.get_function_range_parameters()
+            parameters_drawing = parameters_calculations
 
-            parameters_dr[2][0] /= 10
-            parameters_dr[2][1] /= 10
+            parameters_drawing[2][0] /= 10
+            parameters_drawing[2][1] /= 10
 
             # plot function
             print goal_function.function_name
-            plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_dr)
+            plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
             plotter.plot_function_in_3D()
 
-            na = NewtonAlgorithm(goal_function.expression, *parameters_na, debug=True)
+            na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
+            # starting point
             xn = array([[3.], [3.5]])
             na.set_starting_point_numpy_array(xn)
             min_found = False
@@ -81,7 +84,7 @@ class App:
         user_input = raw_input()
         user_input = user_input.split(',')
         parameters = []
-        if user_input.__len__() < 3:
+        if user_input.__len__() >= 3:
             for par in input:
                 par = float(par)
                 parameters.append([par, par])
