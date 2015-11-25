@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
+    <width>789</width>
     <height>699</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>539</width>
+         <width>753</width>
          <height>765</height>
         </rect>
        </property>
@@ -590,7 +590,41 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <layout class="QVBoxLayout" name="matPlotLayout"/>
+            <widget class="QTabWidget" name="plotterTabWidget">
+             <property name="currentIndex">
+              <number>2</number>
+             </property>
+             <widget class="QWidget" name="plotAllTab">
+              <attribute name="title">
+               <string>All</string>
+              </attribute>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QWidget" name="plotAllWidget" native="true"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="plot3dTab">
+              <attribute name="title">
+               <string>3D plot</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QWidget" name="plot3dWidget" native="true"/>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="plotMeshgridTab">
+              <attribute name="title">
+               <string>Meshgrid</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_9">
+               <item>
+                <widget class="QWidget" name="plotMeshgridWidget" native="true"/>
+               </item>
+              </layout>
+             </widget>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -615,8 +649,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>540</width>
-     <height>23</height>
+     <width>789</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

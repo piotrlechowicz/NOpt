@@ -22,76 +22,107 @@ from random import randint
 
 
 class WidgetPlotter:
-    """If plots a function on given Qwidget"""
-    def __init__(self, parent):
-        self.figure = plt.figure()
-        self.canvas = FigureCanvas(self.figure)
-        # self.toolbar = NavigationToolbar(self.canvas, parent)
+    """If plots a function on given Widget"""
+    def __init__(self, plot_all, plot_3d, plot_meshgrid, main_window):
+        # create three figures
+        parents = [plot_all, plot_3d, plot_meshgrid]
+        self.figures = [plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')] * 3
+        # self.figure_plot_all = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
+        # self.figure_plot_3d = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
+        # self.figure_plot_meshgrid = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
+        # create canvas for all of them
+        self.canvases = [FigureCanvas(figure) for figure in self.figures]
+        # self.canvas = FigureCanvas(self.figure_plot_all)
+        self.toolbars = [NavigationToolbar(canvas, main_window) for canvas in self.canvases]
+        # self.toolbar = NavigationToolbar(self.canvas, main_window)
+
+        for (parent, canvas, toolbar) in zip(parents, self.canvases, self.toolbars):
+            parent.addWidget(toolbar)
+            parent.addWidget(canvas)
+
+
         # parent.addWidget(self.toolbar)
-        parent.addWidget(self.canvas)
+        # parent.addWidget(self.canvas)
+        self.ax_all_3d = self.figures[0].add_subplot(211, projection='3d')
+        self.ax_all_2d = self.figures[0].add_subplot(212)
+        self.ax_3d = self.figures[1].add_subplot(111, projection='3d')
+        self.ax_2d = self.figures[2].add_subplot(111)
+
+    def plot_example(self):
         self.simple_function()
 
     def simple_function(self):
-        ax = self.figure.add_subplot(111)
-        ax.hold(True)
+        self.ax.hold(False)
         data = [randint(0, 10) for x in range(10)]
-        ax.plot(data,  range(10))
+        self.ax.plot(data,  range(10))
+        self.ax.hold(True)
         self.canvas.draw()
 
+    def plot_function(self, goal_function, drawing_parameters):
+        self.clear_axes()
+        plt.suptitle("f(x, y) = " + goal_function.get_function_name(), fontsize=14)
+        plotter = Plotter(goal_function.get_expression(), *drawing_parameters.get_all_properties())
+        plotter.plot_function_in_3d(self.ax_3d)
+        plotter.plot_function_in_color_mesh(self.ax_2d)
+        plotter.add_legend(self.figure_plot_all)
+        self.canvas.draw()
+
+    def __hold_axes(self, boolean):
+        self.ax_2d.hold(boolean)
+        self.ax_3d.hold(boolean)
+
+    def clear_axes(self):
+        self.__hold_axes(False)
+        self.ax_2d.plot([], [])
+        self.ax_3d.plot([], [])
+        self.__hold_axes(True)
 
 
 class Plotter:
-    """Plots a function"""
-    def __init__(self, expression, function_name, start=[-1., -1.], stop=[1., 1.], num_of_val=[101, 101]):
-        self.x_range = np.linspace(start[0], stop[0], num_of_val[0])
-        self.y_range = np.linspace(start[1], stop[1], num_of_val[1])
+    """Plots a function on certain axes"""
+    def __init__(self, expression, start=[-1., -1.], stop=[1., 1.], resolution=[0.1, 0.1]):
+        self.x_range = np.linspace(start[0], stop[0], (stop[0]-start[0])/resolution[0])
+        self.y_range = np.linspace(start[1], stop[1], (stop[1]-start[1]/resolution[1]))
 
-        self.function_name = function_name
         evaluate = vectorize_expression(expression)
         self.x, self.y = np.meshgrid(self.x_range, self.y_range)
         self.z = evaluate(self.x, self.y)
 
-        self.res_ax = None
-
-    def set_x_range_linspace(self, start, stop, num):
+    def set_x_range_line_space(self, start, stop, num):
         self.x_range = np.linspace(start=start, stop=stop, num=num)
 
-    def set_y_range_linspace(self, start, stop, num):
+    def set_y_range_line_space(self, start, stop, num):
         self.y_range = np.linspace(start=start, stop=stop, num=num)
 
-    def plot_function_in_3D(self):
-        fig = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
-        plt.suptitle("f(x, y) = " + self.function_name, fontsize=14)
-
-        # left surface plot
-        ax = fig.add_subplot(121, projection='3d')
-        ax.plot_surface(self.x, self.y, self.z, cmap=cm.jet, rstride=2, cstride=2)
-        ax.set_xlabel('x', fontweight='bold')
-        ax.set_ylabel('y', fontweight='bold')
-        ax.set_zlabel('f(x, y)', fontweight='bold')
+    def plot_function_in_3d(self, axis):
+        axis.plot_surface(self.x, self.y, self.z, cmap=cm.jet, rstride=2, cstride=2)
+        axis.set_xlabel('x', fontweight='bold')
+        axis.set_ylabel('y', fontweight='bold')
+        axis.set_zlabel('f(x, y)', fontweight='bold')
 
         mouse_events = MousePlotEvents()
-        mouse_events.zoom(ax)
-        mouse_events.reset_3D(ax)
+        mouse_events.zoom(axis)
+        mouse_events.reset_3D(axis)
 
-        self.res_ax = fig.add_subplot(122)
-        im = self.res_ax.pcolormesh(self.x, self.y, self.z, cmap=cm.jet)
-        self.res_ax.set_xlabel('x', fontweight='bold')
-        self.res_ax.set_ylabel('y', fontweight='bold')
-        self.res_ax.yaxis.set_label_position('right')
-        # ax.yaxis.tick_right()
+    def plot_function_in_color_mesh(self, axis):
+        self.colormap = axis.pcolormesh(self.x, self.y, self.z, cmap=cm.jet)
+        axis.set_xlabel('x', fontweight='bold')
+        axis.set_ylabel('y', fontweight='bold')
+        axis.yaxis.set_label_position('right')
 
-        mouse_events2 = MousePlotEvents()
-        mouse_events2.zoom(self.res_ax)
-        mouse_events2.move(self.res_ax)
-        mouse_events2.reset_2D(self.res_ax)
+        mouse_events = MousePlotEvents()
+        mouse_events.zoom(axis)
+        mouse_events.move(axis)
+        mouse_events.reset_2D(axis)
 
-        fig.subplots_adjust(bottom=0.2)
-        cbar_ax = fig.add_axes([0.1, 0.05, 0.8, 0.05])
-        fig.colorbar(im, cax=cbar_ax, orientation='horizontal')
-
-        plt.hold(True)
-        plt.draw()
+    def add_legend(self, figure):
+        figure.subplots_adjust(right=0.8 )
+        # self.figure.subplots_adjust(bottom=0.2)
+        cbar_ax = figure.add_axes([0.9, 0.1, 0.01, 0.8])
+        # cbar_ax = figure.add_axes([0.1, 0.05, 0.8, 0.05])
+        figure.colorbar(self.colormap, cax=cbar_ax, orientation='vertical')
+        # plt.hold(True)
+        # plt.draw()
 
     # def plot_result(self):
     #     fig = plt.figure(figsize=(6, 6), dpi=80, facecolor='w', edgecolor='k')

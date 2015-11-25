@@ -25,25 +25,45 @@ from application.ApplicationProperties import NewtonAlgorithmProperties, Drawing
 
 # Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
 
-from matplotlib.backends.backend_qt5agg import FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
-import matplotlib.pyplot as plt
-
 
 class App(QMainWindow, gui.Ui_MainWindow):
     """Main class which controls the flow of an application"""
     def __init__(self, parent=None):
         super(App, self).__init__(parent)
         self.setupUi(self)                                          # create gui components
+        self.__custom_init_settings()
         self.goal_function = GoalFunction()                         # goal function of an algorithm
         self.newton_properties = NewtonAlgorithmProperties()        # create properties holder
         self.drawing_properties = DrawingProperties()               # drawing properties holder
-        self.__set_fields_logic()                                   # connect gui fields to the logic of an application
+        self.__set_text_fields_logic()                              # connect gui fields to the logic of an application
+        self.__set_buttons_logic()
         self.update_fields()                                        # get values of all fields
+        self.plotter = WidgetPlotter(self.plotAllWidget,
+                                     self.plot3dWidget,
+                                     self.plotMeshgridWidget,
+                                     self)                          # plotter to plot the results
 
-    def __set_fields_logic(self):
-        """Set connection between fields and its logic"""
+
+    def __custom_init_settings(self):
+        """Set up some UI components"""
+        self.npWidget.setVisible(False)
+        self.dpWidget.setVisible(False)
+
+    def __set_buttons_logic(self):
         self.executeButton.clicked.connect(self.execute_button_clicked)
+        self.npToolButton.clicked.connect(lambda: self.__toggle_visibility(
+            self.npWidget
+        ))
+        self.dpToolButton.clicked.connect(lambda: self.__toggle_visibility(
+            self.dpWidget
+        ))
+
+    @staticmethod
+    def __toggle_visibility(widget):
+        widget.setVisible(not widget.isVisible())
+
+    def __set_text_fields_logic(self):
+        """Set connection between fields and its logic"""
         self.formulaInput.returnPressed.connect(self.formula_inserted)
         self.npStartingPointX.textChanged.connect(self.set_np_starting_point)
         self.npStartingPointY.textChanged.connect(self.set_np_starting_point)
@@ -86,50 +106,50 @@ class App(QMainWindow, gui.Ui_MainWindow):
         self.run()
 
     def set_np_starting_point(self):
-        self.__text_filed_caller(self.newton_properties.set_starting_point,
+        self.__text_field_caller(self.newton_properties.set_starting_point,
                                  self.npStartingPointX,
                                  self.npStartingPointY)
 
     def set_np_start_boundary(self):
-        self.__text_filed_caller(self.newton_properties.set_start_boundary,
+        self.__text_field_caller(self.newton_properties.set_start_boundary,
                                  self.npStartBoundaryX,
                                  self.npStartBoundaryY)
 
     def set_np_stop_boundary(self):
-        self.__text_filed_caller(self.newton_properties.set_stop_boundary,
+        self.__text_field_caller(self.newton_properties.set_stop_boundary,
                                  self.npStopBoundaryX,
                                  self.npStopBoundaryY)
 
     def set_np_resolution(self):
-        self.__text_filed_caller(self.newton_properties.set_resolution,
+        self.__text_field_caller(self.newton_properties.set_resolution,
                                  self.npResolutionX,
                                  self.npResolutionY)
 
     def set_np_tolerance(self):
-        self.__text_filed_caller(self.newton_properties.set_tolerance,
+        self.__text_field_caller(self.newton_properties.set_tolerance,
                                  self.npTolerance)
 
     def set_dp_start_boundary(self):
-        self.__text_filed_caller(self.drawing_properties.set_start_boundary,
+        self.__text_field_caller(self.drawing_properties.set_start_boundary,
                                  self.dpStartBoundaryX,
                                  self.dpStartBoundaryY)
 
     def set_dp_stop_boundary(self):
-        self.__text_filed_caller(self.drawing_properties.set_stop_boundary,
+        self.__text_field_caller(self.drawing_properties.set_stop_boundary,
                                  self.dpStopBoundaryX,
                                  self.dpStopBoundaryY)
 
     def set_dp_resolution(self):
-        self.__text_filed_caller(self.drawing_properties.set_resolution,
+        self.__text_field_caller(self.drawing_properties.set_resolution,
                                  self.dpResolutionX,
                                  self.dpResolutionY)
 
     def formula_inserted(self):
-        self.__text_filed_caller(self.goal_function.set_goal_function,
+        self.__text_field_caller(self.goal_function.set_goal_function,
                                  self.formulaInput)
 
     @staticmethod
-    def __text_filed_caller(function, *fields):
+    def __text_field_caller(function, *fields):
         """function used to holding errors from getting values of text fields
         It colours incorrect output with red and disable the possibility
         of calling algorithm when error occurred.
@@ -148,7 +168,10 @@ class App(QMainWindow, gui.Ui_MainWindow):
         if not self.goal_function.is_correctly_parsed():        # if function not parsed, return
             return
 
-        plotter = WidgetPlotter(self.matPlotLayout)
+        self.plotter.plot_function(self.goal_function,
+                                   self.drawing_properties)
+
+
         # todo: move it to plotter
             # add plot on the gui
         # figure = plt.figure()
@@ -181,19 +204,6 @@ class App(QMainWindow, gui.Ui_MainWindow):
         #     plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
         #     plotter.plot_function_in_3D()
         #
-        #     # todo: move it to plotter
-        #     # add plot on the gui
-        #     figure = plt.figure()
-        #     canvas = FigureCanvas(figure)
-        #     toolbar = NavigationToolbar(canvas, self)
-        #     self.matPlotLayout.addWidget(toolbar)
-        #     self.matPlotLayout.addWidget(canvas)
-        #     data = [range(10)]
-        #     ax = figure.add_subplot(111)
-        #     ax.hold(True)
-        #     ax.plot(data)
-        #     canvas.draw()
-        #
         #
         #     na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
         #     # starting point
@@ -207,24 +217,11 @@ class App(QMainWindow, gui.Ui_MainWindow):
         #
         #     plotter.wait_to_close_plot_windows()
 
-    def get_function_range_parameters(self):
-        print "enter: start, stop, num_od_values"
-        user_input = raw_input()
-        user_input = user_input.split(',')
-        parameters = []
-        if user_input.__len__() >= 3:
-            for par in input:
-                par = float(par)
-                parameters.append([par, par])
-        else:
-            parameters.extend([[-4., -4.], [4., 4.], [1000, 1000]])
-        return parameters
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     form = App()
-    form.show()
+    form.showMaximized()
 
     app.exec_()
     form.run()

@@ -80,6 +80,7 @@ class DrawingProperties(Properties):
     def __init__(self):
         Properties.__init__(self)
         self.max_nr_of_points = 1000
+        self.resolution = [0.5, 0.5]
 
     def set_resolution(self, x, y):
         try:
@@ -91,5 +92,5 @@ class DrawingProperties(Properties):
                 y = self.stop_boundary[1] - self.start_boundary[1] / self.max_nr_of_points
             self.resolution = [x, y]
             return True
-        except ValueError:
+        except (ValueError, ZeroDivisionError):
             return False
