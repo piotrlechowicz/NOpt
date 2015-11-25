@@ -592,7 +592,7 @@
            <item>
             <widget class="QTabWidget" name="plotterTabWidget">
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="plotAllTab">
               <attribute name="title">
@@ -600,7 +600,7 @@
               </attribute>
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
-                <widget class="QWidget" name="plotAllWidget" native="true"/>
+                <layout class="QVBoxLayout" name="plotAllLayout"/>
                </item>
               </layout>
              </widget>
@@ -610,7 +610,7 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_8">
                <item>
-                <widget class="QWidget" name="plot3dWidget" native="true"/>
+                <layout class="QVBoxLayout" name="plot3dLayout"/>
                </item>
               </layout>
              </widget>
@@ -620,7 +620,7 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
-                <widget class="QWidget" name="plotMeshgridWidget" native="true"/>
+                <layout class="QVBoxLayout" name="plotMeshgridLayout"/>
                </item>
               </layout>
              </widget>

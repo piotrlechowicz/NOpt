@@ -24,25 +24,16 @@ from random import randint
 class WidgetPlotter:
     """If plots a function on given Widget"""
     def __init__(self, plot_all, plot_3d, plot_meshgrid, main_window):
-        # create three figures
+        # create three figures, canvases and toolbars
         parents = [plot_all, plot_3d, plot_meshgrid]
-        self.figures = [plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')] * 3
-        # self.figure_plot_all = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
-        # self.figure_plot_3d = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
-        # self.figure_plot_meshgrid = plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k')
-        # create canvas for all of them
+        self.figures = [plt.figure(figsize=(12, 6), dpi=80, facecolor='w', edgecolor='k') for _ in range(3)]
         self.canvases = [FigureCanvas(figure) for figure in self.figures]
-        # self.canvas = FigureCanvas(self.figure_plot_all)
         self.toolbars = [NavigationToolbar(canvas, main_window) for canvas in self.canvases]
-        # self.toolbar = NavigationToolbar(self.canvas, main_window)
 
         for (parent, canvas, toolbar) in zip(parents, self.canvases, self.toolbars):
             parent.addWidget(toolbar)
             parent.addWidget(canvas)
 
-
-        # parent.addWidget(self.toolbar)
-        # parent.addWidget(self.canvas)
         self.ax_all_3d = self.figures[0].add_subplot(211, projection='3d')
         self.ax_all_2d = self.figures[0].add_subplot(212)
         self.ax_3d = self.figures[1].add_subplot(111, projection='3d')
@@ -62,10 +53,12 @@ class WidgetPlotter:
         self.clear_axes()
         plt.suptitle("f(x, y) = " + goal_function.get_function_name(), fontsize=14)
         plotter = Plotter(goal_function.get_expression(), *drawing_parameters.get_all_properties())
-        plotter.plot_function_in_3d(self.ax_3d)
-        plotter.plot_function_in_color_mesh(self.ax_2d)
-        plotter.add_legend(self.figure_plot_all)
-        self.canvas.draw()
+        plotter.plot_function_in_3d(self.ax_all_3d, self.ax_3d)
+        plotter.plot_function_in_color_mesh(self.ax_all_2d, self.ax_2d)
+        # todo: create legend
+        # plotter.add_legend(self.figure_plot_all)
+        for canvas in self.canvases:
+            canvas.draw()
 
     def __hold_axes(self, boolean):
         self.ax_2d.hold(boolean)
@@ -94,26 +87,28 @@ class Plotter:
     def set_y_range_line_space(self, start, stop, num):
         self.y_range = np.linspace(start=start, stop=stop, num=num)
 
-    def plot_function_in_3d(self, axis):
-        axis.plot_surface(self.x, self.y, self.z, cmap=cm.jet, rstride=2, cstride=2)
-        axis.set_xlabel('x', fontweight='bold')
-        axis.set_ylabel('y', fontweight='bold')
-        axis.set_zlabel('f(x, y)', fontweight='bold')
+    def plot_function_in_3d(self, *axis):
+        for axes in axis:
+            axes.plot_surface(self.x, self.y, self.z, cmap=cm.jet, rstride=2, cstride=2)
+            axes.set_xlabel('x', fontweight='bold')
+            axes.set_ylabel('y', fontweight='bold')
+            axes.set_zlabel('f(x, y)', fontweight='bold')
 
-        mouse_events = MousePlotEvents()
-        mouse_events.zoom(axis)
-        mouse_events.reset_3D(axis)
+            mouse_events = MousePlotEvents()
+            mouse_events.zoom(axes)
+            mouse_events.reset_3D(axes)
 
-    def plot_function_in_color_mesh(self, axis):
-        self.colormap = axis.pcolormesh(self.x, self.y, self.z, cmap=cm.jet)
-        axis.set_xlabel('x', fontweight='bold')
-        axis.set_ylabel('y', fontweight='bold')
-        axis.yaxis.set_label_position('right')
+    def plot_function_in_color_mesh(self, *axis):
+        for axes in axis:
+            self.colormap = axes.pcolormesh(self.x, self.y, self.z, cmap=cm.jet)
+            axes.set_xlabel('x', fontweight='bold')
+            axes.set_ylabel('y', fontweight='bold')
+            axes.yaxis.set_label_position('right')
 
-        mouse_events = MousePlotEvents()
-        mouse_events.zoom(axis)
-        mouse_events.move(axis)
-        mouse_events.reset_2D(axis)
+            mouse_events = MousePlotEvents()
+            mouse_events.zoom(axes)
+            mouse_events.move(axes)
+            mouse_events.reset_2D(axes)
 
     def add_legend(self, figure):
         figure.subplots_adjust(right=0.8 )

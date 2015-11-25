@@ -38,11 +38,10 @@ class App(QMainWindow, gui.Ui_MainWindow):
         self.__set_text_fields_logic()                              # connect gui fields to the logic of an application
         self.__set_buttons_logic()
         self.update_fields()                                        # get values of all fields
-        self.plotter = WidgetPlotter(self.plotAllWidget,
-                                     self.plot3dWidget,
-                                     self.plotMeshgridWidget,
+        self.plotter = WidgetPlotter(self.plotAllLayout,
+                                     self.plot3dLayout,
+                                     self.plotMeshgridLayout,
                                      self)                          # plotter to plot the results
-
 
     def __custom_init_settings(self):
         """Set up some UI components"""
