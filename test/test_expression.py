@@ -20,8 +20,8 @@ class TestExpressions(unittest.TestCase):
 
     def get_goal_function(self, expression):
         gf = GoalFunction()
-        gf.expression = self.parser.parse(expression)
-        gf.fetch_function_name()
+        gf.__expression = self.parser.parse(expression)
+        gf.__fetch_function_name()
         return gf
 
     def testExpressionValidation(self):
@@ -33,5 +33,5 @@ class TestExpressions(unittest.TestCase):
 
     def testExpressionFailure(self):
         for gf in self.goal_err_functions:
-            expr, validates, val_error = ExpressionValidator(gf.expression).validate()
+            expr, validates, val_error = ExpressionValidator(gf.__expression).validate()
             self.assertFalse(validates)

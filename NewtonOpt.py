@@ -1,5 +1,3 @@
-__author__ = 'Piotr Lechowicz'
-
 import sys
 
 try:
@@ -37,6 +35,7 @@ class App(QMainWindow, gui.Ui_MainWindow):
     def __init__(self, parent=None):
         super(App, self).__init__(parent)
         self.setupUi(self)                                          # create gui components
+        self.goal_function = GoalFunction()                         # goal function of an algorithm
         self.newton_properties = NewtonAlgorithmProperties()        # create properties holder
         self.drawing_properties = DrawingProperties()               # drawing properties holder
         self.__set_fields_logic()                                   # connect gui fields to the logic of an application
@@ -45,6 +44,7 @@ class App(QMainWindow, gui.Ui_MainWindow):
     def __set_fields_logic(self):
         """Set connection between fields and its logic"""
         self.executeButton.clicked.connect(self.execute_button_clicked)
+        self.formulaInput.returnPressed.connect(self.formula_inserted)
         self.npStartingPointX.textChanged.connect(self.set_np_starting_point)
         self.npStartingPointY.textChanged.connect(self.set_np_starting_point)
         self.npStartBoundaryX.textChanged.connect(self.set_np_start_boundary)
@@ -63,6 +63,7 @@ class App(QMainWindow, gui.Ui_MainWindow):
 
     def update_fields(self):
         """Update values of all fields"""
+        self.formulaInput.setText(self.goal_function.get_function_name())
         np = self.newton_properties.get_all_properties()
         dp = self.drawing_properties.get_all_properties()
         self.npStartingPointX.setText(str(np[0][0]))
@@ -82,10 +83,7 @@ class App(QMainWindow, gui.Ui_MainWindow):
         self.dpResolutionY.setText(str(dp[2][1]))
 
     def execute_button_clicked(self):
-        # todo: implement this
-        print self.newton_properties.get_all_properties()
-        print self.drawing_properties.get_all_properties()
-        pass
+        self.run()
 
     def set_np_starting_point(self):
         self.__text_filed_caller(self.newton_properties.set_starting_point,
@@ -126,6 +124,10 @@ class App(QMainWindow, gui.Ui_MainWindow):
                                  self.dpResolutionX,
                                  self.dpResolutionY)
 
+    def formula_inserted(self):
+        self.__text_filed_caller(self.goal_function.set_goal_function,
+                                 self.formulaInput)
+
     @staticmethod
     def __text_filed_caller(function, *fields):
         """function used to holding errors from getting values of text fields
@@ -143,72 +145,73 @@ class App(QMainWindow, gui.Ui_MainWindow):
                 field.setStyleSheet("background-color: #aa0000")
 
     def run(self):
-        # main program loop
-        while True:
-            print "Enter a goal function"
-            user_input = raw_input()
-            if user_input == "quit":
-                break
-
-            # application logic
-            goal_function = GoalFunction()
-            parser = Parser()
-            try:
-                goal_function.expression = parser.parse(user_input)
-                goal_function.fetch_function_name()
-            except Exception as exception:
-                print exception.message
-                continue
-
-            expression_validator = ExpressionValidator(goal_function.expression, goal_function.variables)
-            goal_function.expression, validates, validation_error = expression_validator.validate()
-
-            if not validates:
-                print validation_error
-                continue
-
-            print goal_function.expression.toString()
-
-            # TODO: add validation of parameters
-            # TODO: create more user friend api
-            # TODO: to many numpy calculations
-            # get drawing parameters
-            parameters_calculations = self.get_function_range_parameters()
-            parameters_drawing = parameters_calculations
-
-            parameters_drawing[2][0] /= 10
-            parameters_drawing[2][1] /= 10
-
-            # plot function
-            print goal_function.function_name
-            plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
-            plotter.plot_function_in_3D()
-
-            # todo: move it to plotter
-            # add plot on the gui
-            figure = plt.figure()
-            canvas = FigureCanvas(figure)
-            toolbar = NavigationToolbar(canvas, self)
-            self.matPlotLayout.addWidget(toolbar)
-            self.matPlotLayout.addWidget(canvas)
-            data = [range(10)]
-            ax = figure.add_subplot(111)
-            ax.hold(True)
-            ax.plot(data)
-            canvas.draw()
-
-
-            na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
-            # starting point
-            xn = array([[3.], [3.5]])
-            na.set_starting_point_numpy_array(xn)
-            min_found = False
-            while not min_found:
-                xnn, min_found = na.next_step()
-                plotter.add_to_result_numpy_points(xn, xnn)
-                xn = xnn
-
-            plotter.wait_to_close_plot_windows()
+        pass
+        # main program loop - newton algorithm
+        # while True:
+        #     print "Enter a goal function"
+        #     user_input = raw_input()
+        #     if user_input == "quit":
+        #         break
+        #
+        #     # application logic
+        #     # goal_function = GoalFunction()
+        #     # parser = Parser()
+        #     # try:
+        #     #     goal_function.expression = parser.parse(user_input)
+        #     #     goal_function.__fetch_function_name()
+        #     # except Exception as exception:
+        #     #     print exception.message
+        #     #     continue
+        #     #
+        #     # expression_validator = ExpressionValidator(goal_function.expression, goal_function.variables)
+        #     # goal_function.expression, validates, validation_error = expression_validator.validate()
+        #     #
+        #     # if not validates:
+        #     #     print validation_error
+        #     #     continue
+        #
+        #     # print goal_function.expression.toString()
+        #
+        #     # TODO: add validation of parameters
+        #     # TODO: create more user friend api
+        #     # TODO: to many numpy calculations
+        #     # get drawing parameters
+        #     parameters_calculations = self.get_function_range_parameters()
+        #     parameters_drawing = parameters_calculations
+        #
+        #     parameters_drawing[2][0] /= 10
+        #     parameters_drawing[2][1] /= 10
+        #
+        #     # plot function
+        #     print goal_function.function_name
+        #     plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
+        #     plotter.plot_function_in_3D()
+        #
+        #     # todo: move it to plotter
+        #     # add plot on the gui
+        #     figure = plt.figure()
+        #     canvas = FigureCanvas(figure)
+        #     toolbar = NavigationToolbar(canvas, self)
+        #     self.matPlotLayout.addWidget(toolbar)
+        #     self.matPlotLayout.addWidget(canvas)
+        #     data = [range(10)]
+        #     ax = figure.add_subplot(111)
+        #     ax.hold(True)
+        #     ax.plot(data)
+        #     canvas.draw()
+        #
+        #
+        #     na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
+        #     # starting point
+        #     xn = array([[3.], [3.5]])
+        #     na.set_starting_point_numpy_array(xn)
+        #     min_found = False
+        #     while not min_found:
+        #         xnn, min_found = na.next_step()
+        #         plotter.add_to_result_numpy_points(xn, xnn)
+        #         xn = xnn
+        #
+        #     plotter.wait_to_close_plot_windows()
 
     def get_function_range_parameters(self):
         print "enter: start, stop, num_od_values"
