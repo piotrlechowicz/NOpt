@@ -14,6 +14,31 @@ except ImportError as error:
 
 from events import MousePlotEvents
 
+# todo: create try except
+from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+
+from random import randint
+
+
+class WidgetPlotter:
+    """If plots a function on given Qwidget"""
+    def __init__(self, parent):
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        # self.toolbar = NavigationToolbar(self.canvas, parent)
+        # parent.addWidget(self.toolbar)
+        parent.addWidget(self.canvas)
+        self.simple_function()
+
+    def simple_function(self):
+        ax = self.figure.add_subplot(111)
+        ax.hold(True)
+        data = [randint(0, 10) for x in range(10)]
+        ax.plot(data,  range(10))
+        self.canvas.draw()
+
+
 
 class Plotter:
     """Plots a function"""

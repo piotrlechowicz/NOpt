@@ -16,7 +16,7 @@ except ImportError as error:
 
 from expression.goal_function import GoalFunction
 from expression.validate import ExpressionValidator
-from plot.plot import Plotter
+from plot.plot import Plotter, WidgetPlotter
 from optimization.newton import NewtonAlgorithm
 from numpy import array
 from qtgui import gui
@@ -145,32 +145,26 @@ class App(QMainWindow, gui.Ui_MainWindow):
                 field.setStyleSheet("background-color: #aa0000")
 
     def run(self):
-        pass
-        # main program loop - newton algorithm
+        if not self.goal_function.is_correctly_parsed():        # if function not parsed, return
+            return
+
+        plotter = WidgetPlotter(self.matPlotLayout)
+        # todo: move it to plotter
+            # add plot on the gui
+        # figure = plt.figure()
+        # canvas = FigureCanvas(figure)
+        # toolbar = NavigationToolbar(canvas, self)
+        # self.matPlotLayout.addWidget(toolbar)
+        # self.matPlotLayout.addWidget(canvas)
+        # data = [range(10)]
+        # ax = figure.add_subplot(111)
+        # ax.hold(True)
+        # ax.plot(data)
+        # canvas.draw()
+
+        # plot function
         # while True:
-        #     print "Enter a goal function"
-        #     user_input = raw_input()
-        #     if user_input == "quit":
-        #         break
-        #
-        #     # application logic
-        #     # goal_function = GoalFunction()
-        #     # parser = Parser()
-        #     # try:
-        #     #     goal_function.expression = parser.parse(user_input)
-        #     #     goal_function.__fetch_function_name()
-        #     # except Exception as exception:
-        #     #     print exception.message
-        #     #     continue
-        #     #
-        #     # expression_validator = ExpressionValidator(goal_function.expression, goal_function.variables)
-        #     # goal_function.expression, validates, validation_error = expression_validator.validate()
-        #     #
-        #     # if not validates:
-        #     #     print validation_error
-        #     #     continue
-        #
-        #     # print goal_function.expression.toString()
+
         #
         #     # TODO: add validation of parameters
         #     # TODO: create more user friend api
