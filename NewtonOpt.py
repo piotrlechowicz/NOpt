@@ -25,6 +25,9 @@ from application.ApplicationProperties import NewtonAlgorithmProperties, Drawing
 
 # Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
 
+# import Loggers
+from logger.logger import ConsoleLogger, ResultLogger
+
 
 class App(QMainWindow, gui.Ui_MainWindow):
     """Main class which controls the flow of an application"""
@@ -42,6 +45,10 @@ class App(QMainWindow, gui.Ui_MainWindow):
                                      self.plot3dLayout,
                                      self.plotMeshgridLayout,
                                      self)                          # plotter to plot the results
+        ConsoleLogger.set_output_stream(self.consoleTextArea)
+        self.consoleLogger = ConsoleLogger.get_instance()
+        ResultLogger.set_output_stream(self.resultTextArea)
+        self.resultLogger = ResultLogger.get_instance()
 
     def __custom_init_settings(self):
         """Set up some UI components"""
@@ -167,27 +174,15 @@ class App(QMainWindow, gui.Ui_MainWindow):
         if not self.goal_function.is_correctly_parsed():        # if function not parsed, return
             return
 
+        self.consoleLogger.log("Execute button pressed")
+        self.consoleLogger.log("Drawing function...", "gray")
+
+        # draw function
         self.plotter.plot_function(self.goal_function,
                                    self.drawing_properties)
 
+        self.consoleLogger.log("Drawing function finished", "gray")
 
-        # todo: move it to plotter
-            # add plot on the gui
-        # figure = plt.figure()
-        # canvas = FigureCanvas(figure)
-        # toolbar = NavigationToolbar(canvas, self)
-        # self.matPlotLayout.addWidget(toolbar)
-        # self.matPlotLayout.addWidget(canvas)
-        # data = [range(10)]
-        # ax = figure.add_subplot(111)
-        # ax.hold(True)
-        # ax.plot(data)
-        # canvas.draw()
-
-        # plot function
-        # while True:
-
-        #
         #     # TODO: add validation of parameters
         #     # TODO: create more user friend api
         #     # TODO: to many numpy calculations
