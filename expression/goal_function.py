@@ -1,4 +1,10 @@
-from py_expression_eval import Parser
+import sys
+try:
+    from py_expression_eval import Parser
+except ImportError as error:
+    print error.message
+    print "py_expression_eval is necessary"
+    sys.exit("Not all the requirements are fulfilled")
 from expression.validate import ExpressionValidator
 from logger.logger import ConsoleLogger, LoggerLevel
 

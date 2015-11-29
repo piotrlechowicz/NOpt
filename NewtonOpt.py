@@ -1,13 +1,6 @@
 import sys
 
 try:
-    from py_expression_eval import Parser
-except ImportError as error:
-    print error.message
-    print "py_expression_eval is necessary"
-    sys.exit("Not all the requirements are fulfilled")
-
-try:
     from PyQt5.QtWidgets import QApplication, QMainWindow
 except ImportError as error:
     print error.message
@@ -15,17 +8,11 @@ except ImportError as error:
     sys.exit("Not all the requirements are fulfilled")
 
 from expression.goal_function import GoalFunction
-from expression.validate import ExpressionValidator
-from plot.plot import Plotter, WidgetPlotter
+from plot.plot import WidgetPlotter
 from optimization.newton import NewtonAlgorithm
-from numpy import array
 from qtgui import gui
 
 from application.ApplicationProperties import NewtonAlgorithmProperties, DrawingProperties
-
-# Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
-
-# import Loggers
 from logger.logger import ConsoleLogger, ResultLogger, LoggerLevel
 from utils.numpy_utils import convert_array_to_numpy_point
 

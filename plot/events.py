@@ -104,7 +104,6 @@ class MousePlotEvents:
         fig.canvas.mpl_connect('button_press_event', right_button_pressed)
 
     def reset_2D(self, ax):
-        # TODO: Add third dimensional to reset
         def right_button_pressed(event):
             if event.inaxes != ax:
                 return

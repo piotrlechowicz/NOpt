@@ -3,6 +3,11 @@ import sys
 from optimization.optimization_tools import vectorize_expression
 
 try:
+    import matplotlib
+    version = matplotlib.__version__.split(',')
+    if version < [1, 5, 0]:
+        print "matplotlib has to be in version 1.5.0 or greater"
+        sys.exit(1)
     from mpl_toolkits.mplot3d import Axes3D
     from matplotlib import cm
     from matplotlib.backends.backend_qt5agg import FigureCanvas

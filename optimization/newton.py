@@ -1,6 +1,17 @@
+import sys
 from optimization_tools import GradientAlgorithm
 import numpy as np
 from logger.logger import ConsoleLogger, LoggerLevel
+try:
+    import scipy
+    version = scipy.__version__.split(',')
+    if version < [0, 13, 3]:
+        print "scipy has to be in version 0.13.3 or greater"
+        sys.exit(1)
+except ImportError as error:
+    print error.message
+    sys.exit("Not all the requirements are fulfilled")
+
 from scipy.optimize import minimize_scalar
 from utils.numpy_utils import numpy_point_to_string, evaluate_expression_as_string
 

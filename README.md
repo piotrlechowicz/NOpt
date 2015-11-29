@@ -5,10 +5,10 @@ Newton gradient algorithm for finding the minimum of a function of two variables
 Newton method is the second order method, it means it uses not only the gradient but also the hessian to find the minimum.
 
 Pre-requirements:
-* numpy
+* numpy==1.10.1
 * py_expression_eval
-* matplotlib
-* scipy
+* matplotlib=1.5.0
+* scipy==0.13.3
 * PyQt5
 
 #####Newton algorithm is as follows:

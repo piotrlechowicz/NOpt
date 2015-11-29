@@ -2,7 +2,6 @@ import unittest
 from py_expression_eval import Parser
 from optimization.optimization_tools import OptimizationAlgorithm,\
     GradientAlgorithm
-import numpy as np
 
 
 class TestOptimizationAlgorithm(unittest.TestCase):
