@@ -54,6 +54,11 @@ class Properties:
     def get_all_properties(self):
         return [self.start_boundary, self.stop_boundary, self.resolution]
 
+    def set_all_properties(self, *properties):
+        self.set_start_boundary(properties[0][0], properties[0][1])
+        self.set_stop_boundary(properties[1][0], properties[1][1])
+        self.set_resolution(properties[2][0], properties[2][1])
+
 
 class NewtonAlgorithmProperties(Properties):
     def __init__(self):
