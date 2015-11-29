@@ -6,11 +6,13 @@ def vectorize_expression(expression):
 
 
 class OptimizationAlgorithm:
-    def __init__(self, expression, start=[-1., -1.], stop=[1., 1.], num_of_values=[101, 101]):
+    def __init__(self, expression, start=[-1., -1.], stop=[1., 1.], resolution=[0.1, 0.1]):
         self.evaluate = vectorize_expression(expression)
         self.start_x, self.start_y = start
         self.stop_x, self.stop_y = stop
-        self.num_of_values_x, self.num_of_values_y = num_of_values
+        resolution_x, resolution_y = resolution
+        self.num_of_values_x = (self.stop_x - self.start_x) / resolution_x
+        self.num_of_values_y = (self.stop_y - self.start_y) / resolution_y
         self.x = self.y = None
         self.mx = self.my = None
         self.z = None
@@ -56,8 +58,8 @@ class OptimizationAlgorithm:
 
 
 class GradientAlgorithm(OptimizationAlgorithm):
-    def __init__(self, expression, start, stop, num_of_values):
-        OptimizationAlgorithm.__init__(self, expression, start, stop, num_of_values)
+    def __init__(self, expression, start, stop, resolution):
+        OptimizationAlgorithm.__init__(self, expression, start, stop, resolution)
         self.diff_tools = DiffTools(self.z, self.dx, self.dy)
         self.__initialize_diff_tools()
 

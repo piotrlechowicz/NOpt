@@ -7,6 +7,26 @@ except ImportError as error:
     print "PyQt5 is necessary"
     sys.exit("Not all the requirements are fulfilled")
 
+from enum import Enum
+
+
+class LoggerLevel(Enum):
+    NORMAL = 1
+    ADDITIONAL = 2
+    INFO = 3
+    DEBUG = 4
+    WARN = 5
+    ERROR = 6
+
+    @staticmethod
+    def get_logger_color(log_level=NORMAL):
+        return {LoggerLevel.NORMAL: 'black',
+                LoggerLevel.ADDITIONAL: 'gray',
+                LoggerLevel.INFO: 'blue',
+                LoggerLevel.DEBUG: 'green',
+                LoggerLevel.WARN: 'orange',
+                LoggerLevel.ERROR: 'red'}.get(log_level, 'black')
+
 
 class TextAreaLogger(object):
     """Logger for QTextArea class - singleton patter"""
@@ -22,23 +42,25 @@ class TextAreaLogger(object):
         def __init__(self, out):
             self.out = out
 
-        def log(self, text, color=None):
-            if color:
-                self.set_text_color(color)
+        def log(self, text, logger_level=None):
+            if logger_level:
+                self.set_text_color(logger_level)
             if self.out:
                 self.out.append(text)
             else:
                 print text
-            if color:
+            if logger_level:
                 self.reset_text_color()
 
-        def set_text_color(self, color):
+        def set_text_color(self, logger_level):
             if self.out:
+                color = LoggerLevel.get_logger_color(logger_level)
                 self.out.setTextColor(QColor(color))
 
         def reset_text_color(self):
             if self.out:
-                self.out.setTextColor(QColor("black"))
+                color = LoggerLevel.get_logger_color(LoggerLevel.NORMAL)
+                self.out.setTextColor(QColor(color))
 
     @staticmethod
     def get_instance():
@@ -55,9 +77,9 @@ class TextAreaLogger(object):
 
 class ConsoleLogger(TextAreaLogger):
     class _Logger(TextAreaLogger._Logger):
-        def log(self, text, color=None):
+        def log(self, text, logger_level=None):
             print "Console Logger: " + text
-            TextAreaLogger._Logger.log(self, text, color)
+            TextAreaLogger._Logger.log(self, text, logger_level)
 
     @staticmethod
     def get_instance():
@@ -69,9 +91,9 @@ class ConsoleLogger(TextAreaLogger):
 
 class ResultLogger(TextAreaLogger):
     class _Logger(TextAreaLogger._Logger):
-        def log(self, text, color=None):
+        def log(self, text, logger_level=None):
             print "Result Logger: " + text
-            TextAreaLogger._Logger.log(self, text, color)
+            TextAreaLogger._Logger.log(self, text, logger_level)
 
     @staticmethod
     def get_instance():

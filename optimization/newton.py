@@ -4,16 +4,16 @@ import numpy as np
 
 class NewtonAlgorithm(GradientAlgorithm):
     #todo: switch number of  values into the resution
-    def __init__(self, expression, start, stop, num_of_values, tolerance=0.1, tau=1, debug=False):
+    def __init__(self, expression, start, stop, resolution, tolerance=0.1, tau=1, debug=False):
         """
         :param expression: expression of the goal function
         :param start: begin of the function range
         :param stop: end of the function range
-        :param num_of_values: number of values in range
+        :param resolution: resolution of points
         :param tolerance: tolerance of calculations
         :param tau: length of step
         """
-        GradientAlgorithm.__init__(self, expression, start, stop, num_of_values)
+        GradientAlgorithm.__init__(self, expression, start, stop, resolution)
         self.start = start
         self.stop = stop
         self.tolerance = tolerance
@@ -23,7 +23,6 @@ class NewtonAlgorithm(GradientAlgorithm):
         self.iteration = 0
         self.max_nr_of_iterations = 100
         self.minimum_found = False
-
         self.debug = debug
 
     def set_starting_point(self, current):
@@ -90,7 +89,6 @@ class NewtonAlgorithm(GradientAlgorithm):
         # TODO: minimize dk as a search of best tau
         dk = (-gradient) * self.tau
         return np.add(self.current_point, dk)
-
 
     def __calculate_next_dk_value_newton(self, inv_hessian, gradient):
         return -np.dot(inv_hessian, gradient)

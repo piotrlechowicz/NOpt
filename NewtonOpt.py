@@ -26,7 +26,8 @@ from application.ApplicationProperties import NewtonAlgorithmProperties, Drawing
 # Interesting function: (x+1)^2 * (y-1)^4 + (y+1)^4 * (x-1)^2
 
 # import Loggers
-from logger.logger import ConsoleLogger, ResultLogger
+from logger.logger import ConsoleLogger, ResultLogger, LoggerLevel
+from utils.numpy_utils import convert_array_to_numpy_point
 
 
 class App(QMainWindow, gui.Ui_MainWindow):
@@ -35,6 +36,10 @@ class App(QMainWindow, gui.Ui_MainWindow):
         super(App, self).__init__(parent)
         self.setupUi(self)                                          # create gui components
         self.__custom_init_settings()
+        ConsoleLogger.set_output_stream(self.consoleTextArea)
+        self.consoleLogger = ConsoleLogger.get_instance()
+        ResultLogger.set_output_stream(self.resultTextArea)
+        self.resultLogger = ResultLogger.get_instance()
         self.goal_function = GoalFunction()                         # goal function of an algorithm
         self.newton_properties = NewtonAlgorithmProperties()        # create properties holder
         self.drawing_properties = DrawingProperties()               # drawing properties holder
@@ -45,10 +50,6 @@ class App(QMainWindow, gui.Ui_MainWindow):
                                      self.plot3dLayout,
                                      self.plotMeshgridLayout,
                                      self)                          # plotter to plot the results
-        ConsoleLogger.set_output_stream(self.consoleTextArea)
-        self.consoleLogger = ConsoleLogger.get_instance()
-        ResultLogger.set_output_stream(self.resultTextArea)
-        self.resultLogger = ResultLogger.get_instance()
 
     def __custom_init_settings(self):
         """Set up some UI components"""
@@ -171,45 +172,32 @@ class App(QMainWindow, gui.Ui_MainWindow):
                 field.setStyleSheet("background-color: #aa0000")
 
     def run(self):
+        """Main loop of a program - it computes next points found with newton algorithm"""
         if not self.goal_function.is_correctly_parsed():        # if function not parsed, return
             return
 
-        self.consoleLogger.log("Execute button pressed")
-        self.consoleLogger.log("Drawing function...", "gray")
+        self.consoleLogger.log("Execute button pressed", LoggerLevel.NORMAL)
+        self.resultLogger.log("Function: " + self.goal_function.get_function_name(), LoggerLevel.NORMAL)
+        self.consoleLogger.log("Drawing function...", LoggerLevel.ADDITIONAL)
 
         # draw function
         self.plotter.plot_function(self.goal_function,
                                    self.drawing_properties)
 
-        self.consoleLogger.log("Drawing function finished", "gray")
+        self.consoleLogger.log("Drawing function finished", LoggerLevel.ADDITIONAL)
 
-        #     # TODO: add validation of parameters
-        #     # TODO: create more user friend api
-        #     # TODO: to many numpy calculations
-        #     # get drawing parameters
-        #     parameters_calculations = self.get_function_range_parameters()
-        #     parameters_drawing = parameters_calculations
-        #
-        #     parameters_drawing[2][0] /= 10
-        #     parameters_drawing[2][1] /= 10
-        #
-        #     # plot function
-        #     print goal_function.function_name
-        #     plotter = Plotter(goal_function.expression, goal_function.function_name, *parameters_drawing)
-        #     plotter.plot_function_in_3D()
-        #
-        #
-        #     na = NewtonAlgorithm(goal_function.expression, *parameters_calculations, debug=True)
-        #     # starting point
-        #     xn = array([[3.], [3.5]])
-        #     na.set_starting_point_numpy_array(xn)
-        #     min_found = False
-        #     while not min_found:
-        #         xnn, min_found = na.next_step()
-        #         plotter.add_to_result_numpy_points(xn, xnn)
-        #         xn = xnn
-        #
-        #     plotter.wait_to_close_plot_windows()
+        newton_algorithm = NewtonAlgorithm(self.goal_function.get_expression(),
+                                           *self.newton_properties.get_properties_for_newton_algorithm(),
+                                           debug=True)
+
+        # get starting point
+        xn = convert_array_to_numpy_point(self.newton_properties.get_starting_point())
+        newton_algorithm.set_starting_point_numpy_array(xn)
+        min_found = False
+        while not min_found:
+            xnn, min_found = newton_algorithm.next_step()
+            self.plotter.add_numpy_points_to_mesh_grid(xn, xnn)
+            xn = xnn
 
 
 if __name__ == "__main__":
