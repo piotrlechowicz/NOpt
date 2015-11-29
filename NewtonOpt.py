@@ -195,15 +195,21 @@ class App(QMainWindow, gui.Ui_MainWindow):
         newton_algorithm.set_starting_point_numpy_array(xn)
         min_found = False
         while not min_found:
+            self.resultLogger.log("(" + str(xn[0][0]) + ", " + str(xn[1][0]) + ")", LoggerLevel.NORMAL)
+            self.resultLogger.log("with value: " + str(self.goal_function.get_expression().
+                              evaluate({'x': xn[0][0], 'y': xn[1][0]})), LoggerLevel.INFO)
             xnn, min_found = newton_algorithm.next_step()
             self.plotter.add_numpy_points_to_mesh_grid(xn, xnn)
             xn = xnn
+
+        self.resultLogger.log("minimum found at point: \n(" + str(xn[0][0]) + ", " + str(xn[1][0]) + ")",
+                              LoggerLevel.INFO)
+        self.resultLogger.log("with value: " + str(self.goal_function.get_expression().
+                              evaluate({'x': xn[0][0], 'y': xn[1][0]})), LoggerLevel.INFO)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     form = App()
     form.showMaximized()
-
     app.exec_()
-    form.run()

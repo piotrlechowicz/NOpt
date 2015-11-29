@@ -43,7 +43,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>753</width>
+         <width>754</width>
          <height>765</height>
         </rect>
        </property>
@@ -650,10 +650,112 @@
      <x>0</x>
      <y>0</y>
      <width>789</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuChoose_function">
+    <property name="title">
+     <string>Choose function</string>
+    </property>
+    <addaction name="actionAckley_s"/>
+    <addaction name="actionSphere"/>
+    <addaction name="actionRosenbrock"/>
+    <addaction name="actionBeale_s"/>
+    <addaction name="actionGoldstein_Price"/>
+    <addaction name="actionBooth_s"/>
+    <addaction name="actionBukin"/>
+    <addaction name="actionMatyas"/>
+    <addaction name="actionLevi"/>
+    <addaction name="actionEasom"/>
+    <addaction name="actionCross_in_tray"/>
+    <addaction name="actionEggholder"/>
+    <addaction name="actionHolder"/>
+    <addaction name="actionStyblinski_Tang"/>
+    <addaction name="actionSimionescu"/>
+    <addaction name="actionSchaffer"/>
+   </widget>
+   <addaction name="menuChoose_function"/>
   </widget>
+  <action name="actionAckley_s">
+   <property name="text">
+    <string>Ackley's</string>
+   </property>
+  </action>
+  <action name="actionSphere">
+   <property name="text">
+    <string>Sphere</string>
+   </property>
+  </action>
+  <action name="actionRosenbrock">
+   <property name="text">
+    <string>Rosenbrock</string>
+   </property>
+  </action>
+  <action name="actionBeale_s">
+   <property name="text">
+    <string>Beale's</string>
+   </property>
+  </action>
+  <action name="actionGoldstein_Price">
+   <property name="text">
+    <string>Goldstein-Price</string>
+   </property>
+  </action>
+  <action name="actionBooth_s">
+   <property name="text">
+    <string>Booth's</string>
+   </property>
+  </action>
+  <action name="actionBukin">
+   <property name="text">
+    <string>Bukin</string>
+   </property>
+  </action>
+  <action name="actionMatyas">
+   <property name="text">
+    <string>Matyas</string>
+   </property>
+  </action>
+  <action name="actionLevi">
+   <property name="text">
+    <string>Levi</string>
+   </property>
+  </action>
+  <action name="actionEasom">
+   <property name="text">
+    <string>Easom</string>
+   </property>
+  </action>
+  <action name="actionCross_in_tray">
+   <property name="text">
+    <string>Cross-in-tray</string>
+   </property>
+  </action>
+  <action name="actionEggholder">
+   <property name="text">
+    <string>Eggholder</string>
+   </property>
+  </action>
+  <action name="actionHolder">
+   <property name="text">
+    <string>Hölder</string>
+   </property>
+  </action>
+  <action name="actionStyblinski_Tang">
+   <property name="text">
+    <string>Styblinski-Tang</string>
+   </property>
+  </action>
+  <action name="actionSimionescu">
+   <property name="text">
+    <string>Simionescu</string>
+   </property>
+  </action>
+  <action name="actionSchaffer">
+   <property name="text">
+    <string>Schaffer</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

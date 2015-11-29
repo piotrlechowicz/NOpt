@@ -8,7 +8,7 @@ class ExpressionValidator:
                           "e": 2.71828182845904523536}
         self.validates = True
         self.variables = variables
-        self.expr = expression
+        self.expr = expression.simplify({})
         self.all_expr_variables = self.expr.variables()
         self.validation_error = ""
 

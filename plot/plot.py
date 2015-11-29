@@ -38,6 +38,7 @@ class WidgetPlotter:
         self.axis_all_2d = self.figures[0].add_subplot(212)
         self.axis_3d = self.figures[1].add_subplot(111, projection='3d')
         self.axis_2d = self.figures[2].add_subplot(111)
+        self.axes = [self.axis_all_2d, self.axis_all_3d, self.axis_2d, self.axis_3d]
 
     def plot_function(self, goal_function, drawing_parameters):
         """Plots function based on the goal function
@@ -74,14 +75,14 @@ class WidgetPlotter:
 
     def __hold_axes(self, boolean):
         """Determine whether axes are held"""
-        self.axis_2d.hold(boolean)
-        self.axis_3d.hold(boolean)
+        for axis in self.axes:
+            axis.hold(boolean)
 
     def clear_axes(self):
         """Clear content of axes"""
         self.__hold_axes(False)
-        self.axis_2d.plot([], [])
-        self.axis_3d.plot([], [])
+        for axis in self.axes:
+            axis.plot([], [])
         self.__hold_axes(True)
 
 

@@ -8,6 +8,8 @@ Pre-requirements:
 * numpy
 * py_expression_eval
 * matplotlib
+* scipy
+* PyQt5
 
 #####Newton algorithm is as follows:
 There are given parameters set by the user:
@@ -27,7 +29,7 @@ There is a given function of two dimensions - `f(x, y)`
 2. `dk := -H(Pi)^(-1) * grad(Pi)`
 3. `If -dk < epsilon: stop`
 4. Choose step size `tau_k := 1`
-5. `Pk+1 := Pk + dk * tau_k`, Go to 1.
+5. `Pk+1 := Pk - dk * tau_k`, Go to 1.
 
 Step 2 is augmented by a line-search of `f(Pk + tau * dk)` to find an optimal value of the step-size parameter `tau`.
 
