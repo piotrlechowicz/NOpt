@@ -35,8 +35,8 @@ class MousePlotEvents:
             relx = (cur_xlim[1] - xdata)/(cur_xlim[1] - cur_xlim[0])
             rely = (cur_ylim[1] - ydata)/(cur_ylim[1] - cur_ylim[0])
 
-            ax.set_xlim([xdata - new_width * (1-relx), xdata + new_width * (relx)])
-            ax.set_ylim([ydata - new_height * (1-rely), ydata + new_height * (rely)])
+            ax.set_xlim([xdata - new_width * (1 - relx), xdata + new_width * relx])
+            ax.set_ylim([ydata - new_height * (1 - rely), ydata + new_height * rely])
             ax.figure.canvas.draw()
 
         # get the figure of interest
@@ -82,7 +82,7 @@ class MousePlotEvents:
         fig.canvas.mpl_connect('button_release_event', on_release)
         fig.canvas.mpl_connect('motion_notify_event', on_motion)
 
-    def reset_3D(self, ax):
+    def reset_3d(self, ax):
         def right_button_pressed(event):
             if event.inaxes != ax:
                 return
@@ -103,7 +103,7 @@ class MousePlotEvents:
 
         fig.canvas.mpl_connect('button_press_event', right_button_pressed)
 
-    def reset_2D(self, ax):
+    def reset_2d(self, ax):
         def right_button_pressed(event):
             if event.inaxes != ax:
                 return

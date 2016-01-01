@@ -90,7 +90,7 @@ class NewtonAlgorithm(GradientAlgorithm):
         try:
             # invert hessian
             inv_hessian = np.linalg.inv(hessian)
-        except np.linalg.linalg.LinAlgError as error:
+        except np.linalg.linalg.LinAlgError:
             # calculate using steepest descent algorithm
             self.next_point = self.__steepest_descent_next_step(gradient)
         # if no exception
@@ -146,11 +146,11 @@ class NewtonAlgorithm(GradientAlgorithm):
 
         xtau = "%f + tau * %f" % (self.current_point[0][0], dk[0][0])
         ytau = "%f + tau * %f" % (self.current_point[1][0], dk[1][0])
-        expr = self.expression.substitute('x', xtau)        # put it into an expression
-        expr = expr.substitute('y', ytau)
-        expr = expr.simplify({})                            # simplify that it can be converted to string
+        expression = self.expression.substitute('x', xtau)        # put it into an expression
+        expression = expression.substitute('y', ytau)
+        expression = expression.simplify({})                            # simplify that it can be converted to string
         # self.console_logger.log("optimization in direction:\n" + expr.toString(), LoggerLevel.NORMAL)
-        fun = lambda tau: expr.evaluate({'tau': tau})       # make it a function
+        fun = lambda tau: expression.evaluate({'tau': tau})       # make it a function
         res = minimize_scalar(fun, tol=0.01)                # minimize using brent method
         tau = res.x                                         # get the value of tau
         self.console_logger.log("value of tau: " + str(tau), LoggerLevel.ADDITIONAL)

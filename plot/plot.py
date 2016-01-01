@@ -117,7 +117,7 @@ class Plotter:
 
             mouse_events = MousePlotEvents()
             mouse_events.zoom(axis)
-            mouse_events.reset_3D(axis)
+            mouse_events.reset_3d(axis)
 
     def plot_function_in_color_mesh(self, *axes):
         """Plot mesh grid on given axes"""
@@ -130,7 +130,7 @@ class Plotter:
             mouse_events = MousePlotEvents()
             mouse_events.zoom(axis)
             mouse_events.move(axis)
-            mouse_events.reset_2D(axis)
+            mouse_events.reset_2d(axis)
 
     def add_legends(self, *figures):
         """add colormap legend to figures"""
@@ -173,7 +173,3 @@ def test_plot():
 
 if __name__ == "__main__":
     test_plot()
-
-
-
-

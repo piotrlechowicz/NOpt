@@ -43,8 +43,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>754</width>
-         <height>798</height>
+         <width>756</width>
+         <height>860</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -605,11 +605,6 @@
                     </item>
                     <item>
                      <property name="text">
-                      <string>Eggholder</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
                       <string>Holder</string>
                      </property>
                     </item>
@@ -626,11 +621,6 @@
                     <item>
                      <property name="text">
                       <string>Styblinski-Tang</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Simionescu</string>
                      </property>
                     </item>
                    </widget>
@@ -834,22 +824,5 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections>
-  <connection>
-   <sender>chooseFunctionComboBox</sender>
-   <signal>currentTextChanged(QString)</signal>
-   <receiver>formulaInput</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>324</x>
-     <y>121</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>321</x>
-     <y>78</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

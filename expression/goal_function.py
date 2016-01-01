@@ -57,9 +57,8 @@ class GoalFunction:
             self.__expression = expression
             self.__fetch_function_name()                                   # fetch simple name from function
             self.console_logger.log("function: " + self.get_expression().toString(), LoggerLevel.ADDITIONAL)
-            self.correctly_parsed = True
+            self.__correctly_parsed = True
             return True
         except Exception:
-            self.correctly_parsed = False
+            self.__correctly_parsed = False
             return False
-
