@@ -31,7 +31,7 @@ There is a given function of two dimensions - `f(x, y)`
 4. Choose step size `tau_k := 1`
 5. `Pk+1 := Pk - dk * tau_k`, Go to 1.
 
-Step 2 is augmented by a line-search of `f(Pk + tau * dk)` to find an optimal value of the step-size parameter `tau`.
+Step 4 is augmented by a line-search of `f(Pk + tau * dk)` to find an optimal value of the step-size parameter `tau`.
 
 `dk` is a descent direction if `H(Pk)` is SPD (symmetric and positive definite) and `dk != 0`. It is sufficient to show that:
 `-grad(Pk)' * H(Pk)^(-1) * grad(Pk) < 0`.
