@@ -206,11 +206,13 @@ class ApplicationLogic:
             xnn, min_found = newton_algorithm.next_step()
             self.application_gui.plotter.add_numpy_points_to_mesh_grid(xn, xnn)
             xn = xnn
-
-        self.resultLogger.log("minimum found at point: \n(" + str(xn[0][0]) + ", " + str(xn[1][0]) + ")",
+        
+		self.resultLogger.log("minimum found at point: \n(" + str(xn[0][0]) + ", " + str(xn[1][0]) + ")",
                               LoggerLevel.INFO)
         self.resultLogger.log("with value: " + str(self.goal_function.get_expression().
                               evaluate({'x': xn[0][0], 'y': xn[1][0]})), LoggerLevel.INFO)
+		self.resultLogger.log("with nr of iterations: " + str(self.newton_algorithm.get_current_nr_of_iterations(),
+							  LoggerLevel.INFO)
 
     @staticmethod
     def text_field_caller(function, *fields):
