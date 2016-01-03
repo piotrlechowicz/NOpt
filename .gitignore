@@ -1,4 +1,14 @@
+# project structure
 .idea
+
+# backup files
 *~
+
+# python compiled files
 *.pyc
+
+# libre office temporary files
 *.~*#
+
+# swap files
+*.swp
