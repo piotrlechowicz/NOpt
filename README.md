@@ -27,9 +27,9 @@ There is a given function of two dimensions - `f(x, y)`
 
 1. Given `P0 = (x0, y0)`, set `i = 0`, set `epsilon`
 2. `dk := -H(Pi)^(-1) * grad(Pi)`
-3. `If -dk < epsilon: stop`
-4. Choose step size `tau_k := 1`
-5. `Pk+1 := Pk - dk * tau_k`, Go to 1.
+3. Choose step size `tau_k` (optimization in direction)
+4. `Pk+1 := Pk + dk * tau_k`, Go to 1.
+5. `If Pk+1 - Pk < epsilon; then STOP; else i += 1, go to 2
 
 Step 4 is augmented by a line-search of `f(Pk + tau * dk)` to find an optimal value of the step-size parameter `tau`.
 
