@@ -102,6 +102,7 @@ class MousePlotEvents:
         self.start_zlim = tuple(ax.get_zlim())
 
         fig.canvas.mpl_connect('button_press_event', right_button_pressed)
+		
 
     def reset_2d(self, ax):
         def right_button_pressed(event):

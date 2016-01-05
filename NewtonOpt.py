@@ -211,7 +211,7 @@ class ApplicationLogic:
                               LoggerLevel.INFO)
         self.resultLogger.log("with value: " + str(self.goal_function.get_expression().
                               evaluate({'x': xn[0][0], 'y': xn[1][0]})), LoggerLevel.INFO)
-        self.resultLogger.log("with nr of iterations: " + str(self.newton_algorithm.get_current_nr_of_iterations()),
+        self.resultLogger.log("with nr of iterations: " + str(newton_algorithm.get_current_nr_of_iterations()),
 							  LoggerLevel.INFO)
 
     @staticmethod

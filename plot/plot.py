@@ -88,6 +88,7 @@ class WidgetPlotter:
         self.__hold_axes(False)
         for axis in self.axes:
             axis.plot([], [])
+            axis.cla()
         self.__hold_axes(True)
 
 
