@@ -97,6 +97,18 @@ class App(QMainWindow, gui.Ui_MainWindow):
         self.dpResolutionX.setText(str(dp[2][0]))
         self.dpResolutionY.setText(str(dp[2][1]))
 
+    def update_newton_properties_fields(self):
+        np = self.newton_properties.get_all_properties()
+        self.npStartingPointX.setText(str(np[0][0]))
+        self.npStartingPointY.setText(str(np[0][1]))
+        self.npStartBoundaryX.setText(str(np[1][0]))
+        self.npStartBoundaryY.setText(str(np[1][1]))
+        self.npStopBoundaryX.setText(str(np[2][0]))
+        self.npStopBoundaryY.setText(str(np[2][1]))
+        self.npResolutionX.setText(str(np[3][0]))
+        self.npResolutionY.setText(str(np[3][1]))
+        self.npTolerance.setText(str(np[4]))
+
     def set_np_starting_point(self):
         self.application_logic.text_field_caller(self.newton_properties.set_starting_point,
                                                  self.npStartingPointX,
@@ -169,6 +181,7 @@ class ApplicationLogic:
             self.application_gui.formulaInput.setText(expression)
             properties = PredefinedFunctions.get_properties(function_name)
             self.application_gui.set_all_newton_properties(*properties)
+            self.application_gui.update_newton_properties_fields()
 
     def draw(self):
         if not self.goal_function.is_correctly_parsed():        # if function not parsed, return
